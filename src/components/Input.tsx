@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 import { IsCustomMessage } from "../types/types";
 import moment from "moment";
 
-interface IsPostMessage {}
-
 export default function Input({ messages, setMessages }: any) {
   const [inputMessage, setInputMessage] = useState("");
   const [messageId, setMessageId] = useState(0);
@@ -13,10 +11,7 @@ export default function Input({ messages, setMessages }: any) {
     if (inputMessage.trim() === "") return;
     const currentTime = moment().format("YYYY-MM-DD");
 
-    const findData = messages.find(
-      (msg: any) => msg.date.slice(0, 10) === currentTime
-    );
-
+    //새 메시지 데이터
     const newMessage = {
       id: messageId,
       user_id: 1,
@@ -25,16 +20,23 @@ export default function Input({ messages, setMessages }: any) {
       created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
       msg: {
         content: inputMessage,
-        mType: "text",
+        mtype: "text",
       },
     };
+    //현재 작성한 날짜가 기존에 있는지 확인 기
+    const findData = messages.find(
+      (msg: any) => msg.date.slice(0, 10) === currentTime
+    );
 
+    //해당 날짜에 작성한적이 있다면 해당 날짜에 push 하기
     if (findData) {
       let copyData = JSON.parse(JSON.stringify(messages));
       copyData[copyData.length - 1].messages.push(newMessage);
 
-      setMessages((pre: IsCustomMessage[]) => copyData);
-    } else {
+      setMessages(copyData);
+    } 
+    //없다면 새로 데이터를 만들기
+    else {
       setMessages((pre: IsCustomMessage[]) => [
         ...pre,
         { date: currentTime, messages: [newMessage] },

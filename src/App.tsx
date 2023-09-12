@@ -56,7 +56,7 @@ function App() {
 
     fetchMessages();
   }, []);
-
+  console.log(messages, "messages");
   return (
     <AppWrapper className="App">
       <Container>
