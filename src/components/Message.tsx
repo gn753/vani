@@ -1,7 +1,19 @@
 import styled from "@emotion/styled";
 import { IsMessage } from "../types/types";
+
 export default function Messages({ ...rest }: IsMessage) {
   const { msg, created_at, photo_url, user_id, user_name } = rest;
+
+  const dateObj = new Date(created_at);
+
+  const hour = dateObj.getHours();
+
+  const time = hour > 12 ? "오후" : "오전";
+
+  const formattedTime = `${time} : ${hour.toString().padStart(2, "0")}:${dateObj
+    .getMinutes()
+    .toString()
+    .padStart(2, "0")}`;
   return (
     <Container>
       {user_id === 2 && (
@@ -13,14 +25,14 @@ export default function Messages({ ...rest }: IsMessage) {
       <MessageBox row={user_id === 1 ? true : false}>
         <Text row={user_id === 1 ? true : false}>{msg.content}</Text>
         <TimeStamp>
-          <span>{created_at.slice(11, 16)}</span>
+          <span>{formattedTime}</span>
         </TimeStamp>
       </MessageBox>
     </Container>
   );
 }
 
-const Container = styled.div`
+const Container = styled.li`
   margin: 0 auto;
   padding: 10px;
 `;
