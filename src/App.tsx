@@ -2,14 +2,20 @@ import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import Message from "./components/Message";
 import { IsMessage, IsCustomMessage } from "./types/types";
+import Input from "./components/Input";
+import ProfileBox from "./components/ProfileBox";
 
 function App() {
   const [messages, setMessages] = useState<IsCustomMessage[] | []>([]);
+  const [profile, setProfile] = useState<any>({
+    name: "",
+    photo: "",
+  });
+
   useEffect(() => {
     const fetchMessages = async () => {
       const res = await fetch("http://test.vanillabridge.com/test_data");
       const data = await res.json();
-
       //날짜만을 추출
       const extractDays = data.map((it: any) => {
         return it.created_at.slice(0, 10);
@@ -44,8 +50,10 @@ function App() {
 
       setMessages(customOrderedDate);
 
-      //날짜 순 정렬
+      const profile = data.filter((it: any) => it.user_id === 2);
+      setProfile({ photo: profile[0].photo_url, name: profile[0].user_name });
     };
+
     fetchMessages();
   }, []);
 
@@ -54,28 +62,33 @@ function App() {
       <Container>
         <Header>
           <div>
-            <div>채팅방 상대</div>
+            <ProfileBox photo={profile.photo} name={profile.name} />
           </div>
         </Header>
         <Body>
-          <div>
-            <div>
-              {messages.map((messageGroup: any) => {
-                return (
-                  <>
-                    <DayGroupTitle>
-                      <span>{messageGroup.date}</span>
-                    </DayGroupTitle>
-                    <ul>
-                      {messageGroup.messages.map((msg: IsMessage) => (
-                        <Message key={msg.id} {...msg} />
-                      ))}
-                    </ul>
-                  </>
-                );
-              })}
-            </div>
-          </div>
+          <BodyContainer>
+            <List>
+              {messages.length > 0 &&
+                messages.map((messageGroup: any, index) => {
+                  return (
+                    <div key={`${messageGroup.date}-${index}`}>
+                      <DayGroupTitle>
+                        <span>{messageGroup.date}</span>
+                      </DayGroupTitle>
+                      <ul>
+                        {messageGroup.messages.map(
+                          (item: IsMessage) =>
+                            item.msg.mtype === "text" && (
+                              <Message key={item.id} {...item} />
+                            )
+                        )}
+                      </ul>
+                    </div>
+                  );
+                })}
+            </List>
+            <Input messages={messages} setMessages={setMessages} />
+          </BodyContainer>
         </Body>
       </Container>
     </AppWrapper>
@@ -93,12 +106,13 @@ const AppWrapper = styled.div`
 `;
 
 const Container = styled.div`
-  border: 1px solid black;
   width: 360px;
   height: 720px;
 `;
 
 const Header = styled.header`
+  position: fixed;
+  width: 360px;
   background-color: #faf0e1;
   & > div {
     display: flex;
@@ -118,16 +132,23 @@ const DayGroupTitle = styled.h3`
     font-size: 12px;
     padding: 4px;
     border-radius: 3px;
+    box-sizing: border-box;
   }
 `;
 
 const Body = styled.div`
   background-color: #fff9ef;
+`;
+
+const BodyContainer = styled.div`
+  box-sizing: border-box;
+`;
+
+const List = styled.div`
   overflow: scroll;
-  & > div {
-    height: 660px;
-    padding: 10px;
-    border: 1px solid red;
-    box-sizing: border-box;
+  box-sizing: border-box;
+  height: 683px;
+  &::-webkit-scrollbar {
+    display: none;
   }
 `;

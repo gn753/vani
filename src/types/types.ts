@@ -1,8 +1,7 @@
-
-//데이터 구조 커스텀 
+//데이터 구조 커스텀
 export interface IsCustomMessage {
-  date:string;
-  messages:IsMessage[]
+  date: string;
+  messages: IsMessage[];
 }
 
 export interface IsMessage {
@@ -10,9 +9,9 @@ export interface IsMessage {
   user_id: number;
   user_name: string;
   photo_url: string;
-  created_at: Date;
+  created_at: any;
   msg: {
     content: string;
-    mType: string;
+    mtype: string;
   };
 }

@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { IsMessage } from "../types/types";
 import parse from "html-react-parser";
+import ProfileBox from "./ProfileBox";
 export default function Messages({ ...rest }: IsMessage) {
   const { msg, created_at, photo_url, user_id, user_name } = rest;
 
@@ -17,12 +18,7 @@ export default function Messages({ ...rest }: IsMessage) {
 
   return (
     <Container>
-      {user_id === 2 && (
-        <Profile>
-          <Avatar photo={photo_url} />
-          <div>{user_name}</div>
-        </Profile>
-      )}
+      {user_id === 2 && <ProfileBox photo={photo_url} name={user_name} />}
       <MessageBox row={user_id === 1 ? true : false}>
         <Text row={user_id === 1 ? true : false}>
           {parse(`${msg.content}`)}
@@ -38,24 +34,6 @@ export default function Messages({ ...rest }: IsMessage) {
 const Container = styled.li`
   margin: 0 auto;
   padding: 10px;
-`;
-
-const Profile = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-interface IsAvatar {
-  photo: string;
-}
-
-const Avatar = styled.div<IsAvatar>`
-  width: 30px;
-  height: 30px;
-  background-color: #ddd;
-  border-radius: 50%;
-  margin-right: 7px;
-  background-image: url(${(props) => props.photo});
 `;
 
 interface IsMessageBox {
@@ -75,7 +53,7 @@ const Text = styled.p<IsMessageBox>`
   margin: 0;
   padding: 5px 10px;
   border-radius: 12px;
-  white-space: pre-wrap;
+  max-width: 150px;
   border-top-left-radius: ${(props) => (props.row ? "12px" : "0px")};
   background-color: ${(props) => (props.row ? "#03006e" : "#FFF")};
   color: ${(props) => (props.row ? "#FFF" : "#000")};
