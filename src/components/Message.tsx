@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { IsMessage } from "../types/types";
-
+import parse from "html-react-parser";
 export default function Messages({ ...rest }: IsMessage) {
   const { msg, created_at, photo_url, user_id, user_name } = rest;
 
@@ -14,6 +14,7 @@ export default function Messages({ ...rest }: IsMessage) {
     .getMinutes()
     .toString()
     .padStart(2, "0")}`;
+
   return (
     <Container>
       {user_id === 2 && (
@@ -23,7 +24,9 @@ export default function Messages({ ...rest }: IsMessage) {
         </Profile>
       )}
       <MessageBox row={user_id === 1 ? true : false}>
-        <Text row={user_id === 1 ? true : false}>{msg.content}</Text>
+        <Text row={user_id === 1 ? true : false}>
+          {parse(`${msg.content}`)}
+        </Text>
         <TimeStamp>
           <span>{formattedTime}</span>
         </TimeStamp>
@@ -72,6 +75,7 @@ const Text = styled.p<IsMessageBox>`
   margin: 0;
   padding: 5px 10px;
   border-radius: 12px;
+  white-space: pre-wrap;
   border-top-left-radius: ${(props) => (props.row ? "12px" : "0px")};
   background-color: ${(props) => (props.row ? "#03006e" : "#FFF")};
   color: ${(props) => (props.row ? "#FFF" : "#000")};
