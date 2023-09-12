@@ -71,6 +71,8 @@ const MessageBox = styled.div<IsMessageBox>`
 const Text = styled.p<IsMessageBox>`
   margin: 0;
   padding: 5px 10px;
+  border-radius: 12px;
+  border-top-left-radius: ${(props) => (props.row ? "12px" : "0px")};
   background-color: ${(props) => (props.row ? "#03006e" : "#FFF")};
   color: ${(props) => (props.row ? "#FFF" : "#000")};
 `;

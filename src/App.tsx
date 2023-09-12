@@ -63,7 +63,9 @@ function App() {
               {messages.map((messageGroup: any) => {
                 return (
                   <>
-                    <h3>{messageGroup.date}</h3>
+                    <DayGroupTitle>
+                      <span>{messageGroup.date}</span>
+                    </DayGroupTitle>
                     <ul>
                       {messageGroup.messages.map((msg: IsMessage) => (
                         <Message key={msg.id} {...msg} />
@@ -104,6 +106,18 @@ const Header = styled.header`
     height: 60px;
     padding: 20px;
     box-sizing: border-box;
+  }
+`;
+
+const DayGroupTitle = styled.h3`
+  display: flex;
+  justify-content: center;
+  span {
+    background-color: gray;
+    color: #fff;
+    font-size: 12px;
+    padding: 4px;
+    border-radius: 3px;
   }
 `;
 
